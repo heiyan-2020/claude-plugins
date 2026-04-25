@@ -1,38 +1,62 @@
-# claude-plugins-local
+# claude-plugins
 
-A local-only Claude Code marketplace for plugins under active development on this machine. Never published.
-
-## Layout
-
-- `.claude-plugin/marketplace.json` — marketplace manifest
-- `plugins/<name>` — each plugin, typically a symlink to its source repo
+Personal Claude Code plugin marketplace. Index of my plugins; each plugin lives in its own GitHub repo.
 
 ## Register & install
 
 From a Claude Code session:
 
 ```
-/plugin marketplace add ~/projects/claude-plugins-local
-/plugin install <plugin-name>@local
+/plugin marketplace add heiyan-2020/claude-plugins
+/plugin install <plugin-name>@claude-plugins
 ```
+
+(Or with the full URL `git@github.com:heiyan-2020/claude-plugins.git` / `https://github.com/heiyan-2020/claude-plugins.git`.)
+
+## Currently registered
+
+- **vibe-slides** — author academic slide decks via a markdown DSL → pptxgenjs. Source: [heiyan-2020/vibe-slides](https://github.com/heiyan-2020/vibe-slides).
 
 ## Adding a plugin
 
-1. Symlink the plugin's source repo into `plugins/`:
-   ```bash
-   ln -s /abs/path/to/my-plugin plugins/my-plugin
+1. Push the plugin to its own GitHub repo (must contain `.claude-plugin/plugin.json`).
+2. Append to `.claude-plugin/marketplace.json` `plugins[]`:
+
+   ```json
+   {
+     "name": "my-plugin",
+     "source": { "source": "github", "repo": "heiyan-2020/my-plugin" },
+     "description": "...",
+     "category": "...",
+     "version": "x.y.z"
+   }
    ```
-2. Append an entry to `marketplace.json` `plugins[]` with `source: "./plugins/my-plugin"`.
-3. From a session: `/plugin marketplace update local && /plugin install my-plugin@local`.
 
-## Hot-reload caveat
+3. Commit + push this marketplace repo. Then on any machine:
+   `/plugin marketplace update claude-plugins && /plugin install my-plugin@claude-plugins`.
 
-Claude Code copies the plugin contents into `~/.claude/plugins/cache/local/<plugin>/<version>/` at install time. Edits to the source repo do **not** propagate automatically. After editing:
+## Iterating
+
+Claude Code **copies** plugin contents into `~/.claude/plugins/cache/claude-plugins/<plugin>/<version>/` at install time, not symlink/live-read. After editing a plugin and pushing:
 
 ```
-/plugin marketplace update local
-/plugin uninstall <plugin>@local
-/plugin install <plugin>@local
+/plugin marketplace update claude-plugins
+/plugin uninstall <plugin>@claude-plugins
+/plugin install <plugin>@claude-plugins
 ```
 
-For tighter dev loops, prefer `claude --plugin-dir /abs/path/to/plugin` instead of installing.
+For tight dev loops, skip the marketplace and run claude directly against the plugin source:
+
+```bash
+claude --plugin-dir ~/projects/<plugin>
+```
+
+`--plugin-dir` reads live from disk and reloads on `/reload-plugins`.
+
+## Pinning versions
+
+To pin a plugin to a specific git ref instead of `main`, add a `ref` field to its source:
+
+```json
+"source": { "source": "github", "repo": "heiyan-2020/vibe-slides", "ref": "v0.1.0" }
+```
