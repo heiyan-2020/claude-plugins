@@ -8,7 +8,7 @@ From a Claude Code session:
 
 ```
 /plugin marketplace add heiyan-2020/claude-plugins
-/plugin install <plugin-name>@claude-plugins
+/plugin install <plugin-name>@heiyan-2020
 ```
 
 (Or with the full URL `git@github.com:heiyan-2020/claude-plugins.git` / `https://github.com/heiyan-2020/claude-plugins.git`.)
@@ -33,16 +33,16 @@ From a Claude Code session:
    ```
 
 3. Commit + push this marketplace repo. Then on any machine:
-   `/plugin marketplace update claude-plugins && /plugin install my-plugin@claude-plugins`.
+   `/plugin marketplace update heiyan-2020 && /plugin install my-plugin@heiyan-2020`.
 
 ## Iterating
 
-Claude Code **copies** plugin contents into `~/.claude/plugins/cache/claude-plugins/<plugin>/<version>/` at install time, not symlink/live-read. After editing a plugin and pushing:
+Claude Code **copies** plugin contents into `~/.claude/plugins/cache/heiyan-2020/<plugin>/<version>/` at install time, not symlink/live-read. After editing a plugin and pushing:
 
 ```
-/plugin marketplace update claude-plugins
-/plugin uninstall <plugin>@claude-plugins
-/plugin install <plugin>@claude-plugins
+/plugin marketplace update heiyan-2020
+/plugin uninstall <plugin>@heiyan-2020
+/plugin install <plugin>@heiyan-2020
 ```
 
 For tight dev loops, skip the marketplace and run claude directly against the plugin source:

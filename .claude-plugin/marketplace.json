@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "claude-plugins",
+  "name": "heiyan-2020",
   "description": "Personal Claude Code plugin marketplace.",
   "owner": {
     "name": "heiyan-2020"
